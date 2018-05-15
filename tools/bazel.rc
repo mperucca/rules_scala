@@ -1,6 +1,8 @@
 import %workspace%/tools/deleted_packages.rc
 
 common --color yes
+common --define=scala_deps_direct=error
+common --define=scala_deps_used=error
 common --incompatible_bzl_disallow_load_after_statement
 common --incompatible_depset_is_not_iterable
 common --incompatible_depset_union
