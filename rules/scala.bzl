@@ -190,6 +190,7 @@ def _annex_scala_runner_toolchain_implementation(ctx):
     return [platform_common.ToolchainInfo(
         runner = ctx.attr.runner,
         scalacopts = ctx.attr.scalacopts,
+        encoding = ctx.attr.encoding,
     )]
 
 """
@@ -204,6 +205,7 @@ annex_scala_runner_toolchain = rule(
             cfg = "host",
         ),
         "scalacopts": attr.string_list(),
+        "encoding": attr.string(),
     },
 )
 

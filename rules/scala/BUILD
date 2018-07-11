@@ -43,6 +43,7 @@ toolchain(
 
 annex_scala_runner_toolchain(
     name = "config_toolchain_implementation",
+    encoding = "UTF-8",
     runner = select({
         ":config_use_bloop": "@rules_scala_annex//rules/scala:bloop",
         "//conditions:default": "@rules_scala_annex//rules/scala:zinc",
