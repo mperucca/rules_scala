@@ -1,6 +1,6 @@
 package annex
 
-import sbt.testing.{AnnotatedFingerprint, Fingerprint, Framework, Logger, Status, SubclassFingerprint, SuiteSelector, TestWildcardSelector, Task, TaskDef}
+import sbt.testing.{AnnotatedFingerprint, Fingerprint, Framework, Logger, Status, SubclassFingerprint, SuiteSelector, Task, TaskDef, TestWildcardSelector}
 import scala.collection.{breakOut, mutable}
 import scala.util.control.NonFatal
 import xsbt.api.Discovery
@@ -51,9 +51,21 @@ class TestFramework(loader: ClassLoader, framework: Framework, logger: Logger) {
     val classLoader = thread.getContextClassLoader
     thread.setContextClassLoader(loader)
     try {
-      val runner = framework.runner(Array.empty, if (framework.name == "specs2") Array("-ex", scopeAndTestName.replaceAll(".*::", "")) else Array.empty, loader)
+      val runner = framework.runner(
+        Array.empty,
+        if (framework.name == "specs2") Array("-ex", scopeAndTestName.replaceAll(".*::", "")) else Array.empty,
+        loader
+      )
       try {
-        val taskDefs = tests.map(test => new TaskDef(test.name, test.fingerprint, false, Array(new TestWildcardSelector(scopeAndTestName.replace("::", " ")))))
+        val taskDefs = tests.map(
+          test =>
+            new TaskDef(
+              test.name,
+              test.fingerprint,
+              false,
+              Array(new TestWildcardSelector(scopeAndTestName.replace("::", " ")))
+          )
+        )
         val tasks = runner.tasks(taskDefs.toArray)
         logger.info(s"${framework.getClass.getName}: ${tests.size} tests")
         logger.info("")

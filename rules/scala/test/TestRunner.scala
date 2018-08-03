@@ -117,7 +117,11 @@ object TestRunner {
       .map(text => Pattern.compile(if (text contains "#") raw"${text.replaceAll("#.*", "")}" else text))
     val testScopeAndName = sys.env
       .get("TESTBRIDGE_TEST_ONLY")
-      .map(text => if (text contains "#") text.replaceAll(".*#", "").replaceAll("\\$", "").replace("\\Q", "").replace("\\E", "") else "")
+      .map(
+        text =>
+          if (text contains "#") text.replaceAll(".*#", "").replaceAll("\\$", "").replace("\\Q", "").replace("\\E", "")
+          else ""
+      )
 
     var count = 0
     val passed = frameworks.forall { framework =>

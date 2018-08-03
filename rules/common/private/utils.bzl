@@ -22,7 +22,7 @@ def _strip_margin_line(line, delim):
         return line
 
 def _version_tuple(version):
-    return [int(n) for n in version.split("-")[0].split(".")]
+    return [int(n) for n in version.split("rclucid")[0].split(".")]
 
 def require_bazel_version(
         required_version,
