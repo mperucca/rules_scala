@@ -12,7 +12,10 @@ annex_scala_library(
     srcs = ["Macro.scala"],
     macro = True,
     scala = "@scala_2_12",
-    deps = [":util"],
+    deps = [
+        ":util",
+        "@scala_2_12_scala_reflect//jar",
+    ],
 )
 
 annex_scala_library(
@@ -20,14 +23,20 @@ annex_scala_library(
     srcs = ["MacroOnly.scala"],
     macro = True,
     scala = "@scala_2_12",
-    deps = [":macro"],
+    deps = [
+        ":macro",
+        "@scala_2_12_scala_reflect//jar",
+    ],
 )
 
 annex_scala_library(
     name = "macro_bad",
     srcs = ["Macro.scala"],
     scala = "@scala_2_12",
-    deps = [":util"],
+    deps = [
+        ":util",
+        "@scala_2_12_scala_reflect//jar",
+    ],
 )
 
 annex_scala_library(
