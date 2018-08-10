@@ -1,5 +1,19 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+rules_scala_version="958864711b3fe00045ac57b2ba86f709eeb8262d"
+http_archive(
+    name = "io_bazel_rules_scala",
+    url = "https://github.com/bazelbuild/rules_scala/archive/%s.zip" % rules_scala_version,
+    type = "zip",
+    strip_prefix = "rules_scala-%s" % rules_scala_version
+)
+
+load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
+scala_repositories()
+
+load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
+scala_register_toolchains()
+
 http_archive(
     name = "com_google_protobuf",
     sha256 = "d7a221b3d4fb4f05b7473795ccea9e05dab3b8721f6286a95fffbffc2d926f8b",
