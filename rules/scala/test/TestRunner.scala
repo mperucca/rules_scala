@@ -136,7 +136,7 @@ object TestRunner {
           filter.fold(true)(_(test, count))
         }
       }
-      filteredTests.isEmpty || framework.execute(filteredTests, testScopeAndName.get)
+      filteredTests.isEmpty || framework.execute(filteredTests, testScopeAndName.getOrElse(""))
     }
     sys.exit(if (passed) 0 else 1)
   }
