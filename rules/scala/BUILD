@@ -147,6 +147,7 @@ scalac_binary(
 annex_scala_binary(
     name = "test",
     srcs = glob(["test/**/*.scala"]),
+    main_class = "annex.TestRunner",
     scala = "//external:scala_annex_scala",
     visibility = ["//visibility:public"],
     deps = [

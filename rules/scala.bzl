@@ -98,7 +98,7 @@ annex_scala_binary = rule(
         "runtime_deps": attr.label_list(),
         "exports": attr.label_list(),
         "macro": attr.bool(default = False),
-        "main_class": attr.string(),
+        "main_class": attr.string(mandatory = True),
         "scala": attr.label(
             default = "@scala",
             providers = [_ScalaConfiguration, _ZincConfiguration],
@@ -117,6 +117,7 @@ annex_scala_binary = rule(
     outputs = {
         "bin": "%{name}-bin",
         "jar": "%{name}.jar",
+        "deploy_jar": "%{name}_deploy.jar",
     },
 )
 
