@@ -451,7 +451,7 @@ def annex_scala_test_implementation(ctx):
         args.add("--apis")
         args.add(res.zinc_info.apis.short_path)
         args.add("--frameworks")
-        args.add(ctx.attr.frameworks)
+        args.add_all(ctx.attr.frameworks)
         args.add("--")
         args.add_all(res.java_info.transitive_runtime_jars, map_each = _short_path)
     else:
