@@ -56,7 +56,7 @@ annex_scala_library = rule(
     implementation = _annex_scala_library_implementation,
     attrs = dict({
         "srcs": attr.label_list(allow_files = [".scala", ".java", ".srcjar"]),
-        "data": attr.label_list(allow_files = True, cfg = "data"),
+        "data": attr.label_list(allow_files = True),
         "deps": attr.label_list(aspects = [_labeled_jars]),
         "deps_used_whitelist": attr.label_list(),
         "runtime_deps": attr.label_list(),
@@ -88,7 +88,7 @@ annex_scala_binary = rule(
     implementation = _annex_scala_binary_implementation,
     attrs = dict({
         "srcs": attr.label_list(allow_files = [".scala", ".java", ".srcjar"]),
-        "data": attr.label_list(allow_files = True, cfg = "data"),
+        "data": attr.label_list(allow_files = True),
         "deps": attr.label_list(aspects = [_labeled_jars]),
         "deps_used_whitelist": attr.label_list(),
         "javacopts": attr.label_list(),
@@ -124,7 +124,7 @@ annex_scala_test = rule(
     implementation = _annex_scala_test_implementation,
     attrs = dict({
         "srcs": attr.label_list(allow_files = [".scala", ".java", ".srcjar"]),
-        "data": attr.label_list(allow_files = True, cfg = "data"),
+        "data": attr.label_list(allow_files = True),
         "deps": attr.label_list(aspects = [_labeled_jars]),
         "deps_used_whitelist": attr.label_list(),
         "javacopts": attr.label_list(),
