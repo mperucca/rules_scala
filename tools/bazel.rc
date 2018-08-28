@@ -3,7 +3,7 @@ import %workspace%/tools/deleted_packages.rc
 common --color yes
 common --define=scala_deps_direct=error
 common --define=scala_deps_used=error
-common --all_incompatible_changes
+#common --all_incompatible_changes
 # https://github.com/bazelbuild/bazel/issues/4316
 common --incompatible_disallow_data_transition=false
 

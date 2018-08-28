@@ -12,6 +12,8 @@ annex_scala_binary(
     srcs = glob(["scalafmt/**/*.scala"]),
     scala = "//external:scala_annex_scala",
     visibility = ["//visibility:public"],
+    # TODO: FIX ME
+    main_class = "FOO",
     deps = [
         "//rules/common:worker",
         "@scalafmt_com_geirsson_metaconfig_core_2_12",

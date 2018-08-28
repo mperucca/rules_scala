@@ -1,6 +1,7 @@
 load("//rules:scala.bzl", "annex_scala_library", "annex_scala_binary", "annex_scala_deps_toolchain", "annex_scala_runner_toolchain")
 load("//rules:scalac.bzl", "scalac_binary", "scalac_library")
 load("//rules:scalafmt.bzl", "annex_scala_format_test")
+load("//rules:scala.bzl", "scala_import")
 
 # Bloop
 
@@ -173,6 +174,32 @@ java_proto_library(
     deps = [":zinc_options_proto"],
 )
 
+scala_import(
+    name = "kevin_local_org_scala_sbt_zinc_2_12",
+    jars = ["local_zinc/zinc/target/scala-2.12/zinc_2.12-1.2.1-18af986799e952929148e0305e5337d91bc2d953-SNAPSHOT.jar"],
+    deps = [
+        "@scala_annex_org_scala_sbt_zinc_classfile_2_12",
+        "@scala_annex_org_scala_sbt_zinc_compile_core_2_12",
+        "@kevin_local_org_scala_sbt_zinc_core_2_12",
+        "@scala_annex_org_scala_sbt_zinc_ivy_integration_2_12",
+        "@scala_annex_org_scala_sbt_zinc_persist_2_12",
+        "@scala_annex_scala_2_12_scala_library//jar",
+    ]
+)
+
+scala_import(
+    name = "kevin_local_org_scala_sbt_zinc_core_2_12",
+    jars = ["local_zinc/internal/zinc-core/target/scala-2.12/zinc-core_2.12-1.2.1-18af986799e952929148e0305e5337d91bc2d953-SNAPSHOT.jar"],
+    deps = [
+        "@scala_annex_org_scala_sbt_zinc_classfile_2_12",
+        "@scala_annex_org_scala_sbt_zinc_compile_core_2_12",
+        "@kevin_local_org_scala_sbt_zinc_core_2_12",
+        "@scala_annex_org_scala_sbt_zinc_ivy_integration_2_12",
+        "@scala_annex_org_scala_sbt_zinc_persist_2_12",
+        "@scala_annex_scala_2_12_scala_library//jar",
+    ]
+)
+
 scalac_binary(
     name = "zinc",
     srcs = glob(["zinc/**/*.scala"]),
@@ -187,7 +214,7 @@ scalac_binary(
         "//rules/common:worker",
         "//rules/common/third_party/bazel/src/java_tools/buildjar/java/com/google/devtools/build/buildjar/jarhelper",
         "@scala_annex_org_scala_sbt_test_interface",
-        "@scala_annex_org_scala_sbt_zinc_2_12",
+        ":kevin_local_org_scala_sbt_zinc",
     ],
 )
 
