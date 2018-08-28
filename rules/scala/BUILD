@@ -154,11 +154,11 @@ annex_scala_binary(
     deps = [
         "@scala_annex_com_trueaccord_scalapb_scalapb_runtime_2_12",
         "@scala_annex_net_sourceforge_argparse4j_argparse4j",
-        "@scala_annex_org_scala_sbt_compiler_interface",
+        ":kevin_local_org_scala_sbt_compiler_interface_2_12",
         "@scala_annex_org_scala_sbt_test_interface",
-        "@scala_annex_org_scala_sbt_zinc_apiinfo_2_12",
-        "@scala_annex_org_scala_sbt_zinc_core_2_12",
-        "@scala_annex_org_scala_sbt_zinc_persist_2_12",
+        ":kevin_local_org_scala_sbt_zinc_apiinfo_2_12",
+        ":kevin_local_org_scala_sbt_zinc_core_2_12",
+        ":kevin_local_org_scala_sbt_zinc_persist_2_12",
     ],
 )
 
