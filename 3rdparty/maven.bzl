@@ -244,7 +244,7 @@ def list_dependencies():
                     "http://central.maven.org/maven2/ch/epfl/scala/zinc-compile-core_2.12/1.1.1+49-1c290cbb/zinc-compile-core_2.12-1.1.1+49-1c290cbb-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
         },
         {
             "bind_args": {
@@ -272,7 +272,7 @@ def list_dependencies():
                     "http://central.maven.org/maven2/ch/epfl/scala/zinc-core_2.12/1.1.1+49-1c290cbb/zinc-core_2.12-1.1.1+49-1c290cbb-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
         },
         {
             "bind_args": {
@@ -343,7 +343,7 @@ def list_dependencies():
                     "http://central.maven.org/maven2/ch/epfl/scala/zinc_2.12/1.1.1+49-1c290cbb/zinc_2.12-1.1.1+49-1c290cbb-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
         },
         {
             "bind_args": {
@@ -537,8 +537,9 @@ def list_dependencies():
             "lang": "java"
         },
         # duplicates in com.eed3si9n:sjson-new-core_2.12 promoted to 0.8.2
+        # - com.eed3si9n:sjson-new-scalajson_2.12:0.8.2 wanted version 0.8.2
         # - org.scala-sbt:librarymanagement-ivy_2.12:1.0.0 wanted version 0.8.0
-        # - org.scala-sbt:util-logging_2.12:1.2.0 wanted version 0.8.2
+        # - org.scala-sbt:util-logging_2.12:1.2.1 wanted version 0.8.2
         {
             "bind_args": {
                 "actual": "@scala_annex_com_eed3si9n_sjson_new_core_2_12",
@@ -588,6 +589,7 @@ def list_dependencies():
                 "default_visibility": [ "//visibility:public" ],
                 "deps": [
                     "@scala_annex_com_eed3si9n_shaded_scalajson_2_12",
+                    "@scala_annex_com_eed3si9n_sjson_new_core_2_12",
                     "@scala_annex_org_spire_math_jawn_parser_2_12"
                 ],
                 "jar_sha256": "a72ea3b3331d689e5aff14edab9b33319d3d0140e9512b87568e6311786c849d",
@@ -1929,6 +1931,7 @@ def list_dependencies():
         },
         # duplicates in org.scala-lang.modules:scala-parser-combinators_2.12 promoted to 1.0.5
         # - ch.epfl.scala:zinc-compile-core_2.12:1.1.1+49-1c290cbb wanted version 1.0.5
+        # - org.scala-sbt:util-scripted_2.12:1.2.1 wanted version 1.0.4
         # - org.scala-sbt:zinc-compile-core_2.12:1.2.1 wanted version 1.0.5
         # - org.scalatest:scalatest_2.12:3.0.4 wanted version 1.0.4
         {
@@ -2038,6 +2041,10 @@ def list_dependencies():
         },
         # duplicates in org.scala-sbt:io_2.12 promoted to 1.2.0
         # - ch.epfl.scala:zinc-core_2.12:1.1.1+49-1c290cbb wanted version 1.1.3
+        # - org.scala-sbt:util-cache_2.12:1.2.1 wanted version 1.2.0
+        # - org.scala-sbt:util-logging_2.12:1.2.1 wanted version 1.2.0
+        # - org.scala-sbt:util-scripted_2.12:1.2.1 wanted version 1.2.0
+        # - org.scala-sbt:util-tracking_2.12:1.2.1 wanted version 1.2.0
         # - org.scala-sbt:zinc-core_2.12:1.2.1 wanted version 1.2.0
         {
             "bind_args": {
@@ -2112,7 +2119,7 @@ def list_dependencies():
                     "http://central.maven.org/maven2/org/scala-sbt/librarymanagement-core_2.12/1.2.0/librarymanagement-core_2.12-1.2.0-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
         },
         {
             "bind_args": {
@@ -2137,7 +2144,7 @@ def list_dependencies():
                     "http://central.maven.org/maven2/org/scala-sbt/librarymanagement-ivy_2.12/1.0.0/librarymanagement-ivy_2.12-1.0.0-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
         },
         {
             "bind_args": {
@@ -2202,6 +2209,9 @@ def list_dependencies():
             },
             "lang": "java"
         },
+        # duplicates in org.scala-sbt:util-cache_2.12 fixed to 1.2.1
+        # - org.scala-sbt:librarymanagement-core_2.12:1.2.0 wanted version 1.2.0
+        # - org.scala-sbt:util-tracking_2.12:1.2.1 wanted version 1.2.1
         {
             "bind_args": {
                 "actual": "@scala_annex_org_scala_sbt_util_cache_2_12",
@@ -2210,22 +2220,26 @@ def list_dependencies():
             "import_args": {
                 "default_visibility": [ "//visibility:public" ],
                 "deps": [
-                    "@scala_annex_com_eed3si9n_sjson_new_murmurhash_2_12"
+                    "@scala_annex_com_eed3si9n_sjson_new_murmurhash_2_12",
+                    "@scala_annex_com_eed3si9n_sjson_new_scalajson_2_12",
+                    "@scala_annex_org_scala_sbt_io_2_12",
+                    "@scala_annex_scala_2_12_scala_compiler//jar",
+                    "@scala_annex_scala_2_12_scala_library//jar"
                 ],
-                "jar_sha256": "622fd806450b232442172b32ff76bc547f015ae8935950c90d336f8920dae07f",
+                "jar_sha256": "3de05e4338d0a6161618f1ff51126c33fa581fd4fa62f4773433829c249a4ab2",
                 "jar_urls": [
-                    "http://central.maven.org/maven2/org/scala-sbt/util-cache_2.12/1.2.0/util-cache_2.12-1.2.0.jar"
+                    "http://central.maven.org/maven2/org/scala-sbt/util-cache_2.12/1.2.1/util-cache_2.12-1.2.1.jar"
                 ],
                 "licenses": [ "notice" ],
                 "name": "scala_annex_org_scala_sbt_util_cache_2_12",
-                "srcjar_sha256": "dbb00a2a92d17d5c01e5eaf0e57bdfedf58d7f5b67a974641e6a026b38d14408",
+                "srcjar_sha256": "365290f7473a149f5a3607d85266ce781f0da7b6ae95ef20c7e298af5b00fb48",
                 "srcjar_urls": [
-                    "http://central.maven.org/maven2/org/scala-sbt/util-cache_2.12/1.2.0/util-cache_2.12-1.2.0-sources.jar"
+                    "http://central.maven.org/maven2/org/scala-sbt/util-cache_2.12/1.2.1/util-cache_2.12-1.2.1-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
         },
-        # duplicates in org.scala-sbt:util-control_2.12 promoted to 1.2.0
+        # duplicates in org.scala-sbt:util-control_2.12 fixed to 1.2.1
         # - ch.epfl.scala:zinc-compile-core_2.12:1.1.1+49-1c290cbb wanted version 1.1.2
         # - org.scala-sbt:zinc-compile-core_2.12:1.2.1 wanted version 1.2.0
         {
@@ -2235,22 +2249,25 @@ def list_dependencies():
             },
             "import_args": {
                 "default_visibility": [ "//visibility:public" ],
-                "jar_sha256": "87f8f8decb351e50415b5fabb7aa11a110e29bf0a31a4ba0e8662987cb9be580",
+                "deps": [ "@scala_annex_scala_2_12_scala_library//jar" ],
+                "jar_sha256": "6a9177f3424905ec7f0e41bf5a2724918756dad3fb00ba7ec47f004b0e7f9923",
                 "jar_urls": [
-                    "http://central.maven.org/maven2/org/scala-sbt/util-control_2.12/1.2.0/util-control_2.12-1.2.0.jar"
+                    "http://central.maven.org/maven2/org/scala-sbt/util-control_2.12/1.2.1/util-control_2.12-1.2.1.jar"
                 ],
                 "licenses": [ "notice" ],
                 "name": "scala_annex_org_scala_sbt_util_control_2_12",
-                "srcjar_sha256": "220fc66fb3e7c5c18237e9d308fd3c2f3e988230ee2c4994a46ca09e2cab9597",
+                "srcjar_sha256": "003a83466ff9a6e49edf3533141f4dbc38f05212a766de89fe00ec08a12aec8a",
                 "srcjar_urls": [
-                    "http://central.maven.org/maven2/org/scala-sbt/util-control_2.12/1.2.0/util-control_2.12-1.2.0-sources.jar"
+                    "http://central.maven.org/maven2/org/scala-sbt/util-control_2.12/1.2.1/util-control_2.12-1.2.1-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
         },
-        # duplicates in org.scala-sbt:util-interface promoted to 1.2.0
+        # duplicates in org.scala-sbt:util-interface fixed to 1.2.1
         # - ch.epfl.scala:compiler-interface:1.1.1+49-1c290cbb wanted version 1.1.2
         # - org.scala-sbt:compiler-interface:1.2.1 wanted version 1.2.0
+        # - org.scala-sbt:util-logging_2.12:1.2.1 wanted version 1.2.1
+        # - org.scala-sbt:util-scripted_2.12:1.2.1 wanted version 1.2.1
         {
             "bind_args": {
                 "actual": "@scala_annex_org_scala_sbt_util_interface",
@@ -2258,21 +2275,22 @@ def list_dependencies():
             },
             "import_args": {
                 "default_visibility": [ "//visibility:public" ],
-                "jar_sha256": "444bc23ec31e30ed76a34cd7e142c1a7e4fa84b9d838945b46c8f6f780a798c6",
+                "jar_sha256": "3480125bc186ab0cef8401a9e1d2bac22e3dc9390f6d2523cd50b981d148a0f1",
                 "jar_urls": [
-                    "http://central.maven.org/maven2/org/scala-sbt/util-interface/1.2.0/util-interface-1.2.0.jar"
+                    "http://central.maven.org/maven2/org/scala-sbt/util-interface/1.2.1/util-interface-1.2.1.jar"
                 ],
                 "licenses": [ "notice" ],
                 "name": "scala_annex_org_scala_sbt_util_interface",
-                "srcjar_sha256": "94aa85d25647d83e83b31fb55494be70927989542d025608d6eb5650529c738a",
+                "srcjar_sha256": "ac663808fdb4a7c3b2d616d5e8e3df0314000bb101382cd9c1373d75d74929e6",
                 "srcjar_urls": [
-                    "http://central.maven.org/maven2/org/scala-sbt/util-interface/1.2.0/util-interface-1.2.0-sources.jar"
+                    "http://central.maven.org/maven2/org/scala-sbt/util-interface/1.2.1/util-interface-1.2.1-sources.jar"
                 ]
             },
             "lang": "java"
         },
-        # duplicates in org.scala-sbt:util-logging_2.12 promoted to 1.2.0
+        # duplicates in org.scala-sbt:util-logging_2.12 fixed to 1.2.1
         # - ch.epfl.scala:zinc-core_2.12:1.1.1+49-1c290cbb wanted version 1.1.2
+        # - org.scala-sbt:util-scripted_2.12:1.2.1 wanted version 1.2.1
         # - org.scala-sbt:zinc-core_2.12:1.2.1 wanted version 1.2.0
         {
             "bind_args": {
@@ -2288,20 +2306,23 @@ def list_dependencies():
                     "@scala_annex_jline_jline",
                     "@scala_annex_org_apache_logging_log4j_log4j_api",
                     "@scala_annex_org_apache_logging_log4j_log4j_core",
-                    "@scala_annex_scala_2_12_scala_compiler//jar"
+                    "@scala_annex_org_scala_sbt_io_2_12",
+                    "@scala_annex_org_scala_sbt_util_interface",
+                    "@scala_annex_scala_2_12_scala_compiler//jar",
+                    "@scala_annex_scala_2_12_scala_library//jar"
                 ],
-                "jar_sha256": "d3eddf8ab0ed3cfa4065b0f2148babbe763141c034a443cdaeddc62d294a5b92",
+                "jar_sha256": "6e23fdeba1c01e33c46c5d9012577e95f2dcf997af8efef02a3b1a82dae00754",
                 "jar_urls": [
-                    "http://central.maven.org/maven2/org/scala-sbt/util-logging_2.12/1.2.0/util-logging_2.12-1.2.0.jar"
+                    "http://central.maven.org/maven2/org/scala-sbt/util-logging_2.12/1.2.1/util-logging_2.12-1.2.1.jar"
                 ],
                 "licenses": [ "notice" ],
                 "name": "scala_annex_org_scala_sbt_util_logging_2_12",
-                "srcjar_sha256": "369ce35ccf5dbcb8c24fc097144bb7292c0a7716250b327376a9b291dad8e992",
+                "srcjar_sha256": "bb7374abc28b99571e43be00c5d5afb0b186845daa8d9df98f3849ac57d5a786",
                 "srcjar_urls": [
-                    "http://central.maven.org/maven2/org/scala-sbt/util-logging_2.12/1.2.0/util-logging_2.12-1.2.0-sources.jar"
+                    "http://central.maven.org/maven2/org/scala-sbt/util-logging_2.12/1.2.1/util-logging_2.12-1.2.1-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
         },
         {
             "bind_args": {
@@ -2323,7 +2344,7 @@ def list_dependencies():
             },
             "lang": "java"
         },
-        # duplicates in org.scala-sbt:util-relation_2.12 promoted to 1.2.0
+        # duplicates in org.scala-sbt:util-relation_2.12 fixed to 1.2.1
         # - ch.epfl.scala:zinc-core_2.12:1.1.1+49-1c290cbb wanted version 1.1.2
         # - org.scala-sbt:zinc-core_2.12:1.2.1 wanted version 1.2.0
         {
@@ -2333,18 +2354,71 @@ def list_dependencies():
             },
             "import_args": {
                 "default_visibility": [ "//visibility:public" ],
-                "jar_sha256": "dd7c1bd57e69032f30c16c4efbd4adcb9cb76374200e37bc39f6b4748cfd6235",
+                "deps": [ "@scala_annex_scala_2_12_scala_library//jar" ],
+                "jar_sha256": "0f24698c8273cdb90665defb9df9e8157bc196447b0d98d26e1b9ebe9ebcb74a",
                 "jar_urls": [
-                    "http://central.maven.org/maven2/org/scala-sbt/util-relation_2.12/1.2.0/util-relation_2.12-1.2.0.jar"
+                    "http://central.maven.org/maven2/org/scala-sbt/util-relation_2.12/1.2.1/util-relation_2.12-1.2.1.jar"
                 ],
                 "licenses": [ "notice" ],
                 "name": "scala_annex_org_scala_sbt_util_relation_2_12",
-                "srcjar_sha256": "920f15393ef0869645846b571ebddfc3173b399aa4c45cd528298e886e52222b",
+                "srcjar_sha256": "3956d45db78f017488b99e95945515056feb31302d12d82248931907400ffa5a",
                 "srcjar_urls": [
-                    "http://central.maven.org/maven2/org/scala-sbt/util-relation_2.12/1.2.0/util-relation_2.12-1.2.0-sources.jar"
+                    "http://central.maven.org/maven2/org/scala-sbt/util-relation_2.12/1.2.1/util-relation_2.12-1.2.1-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
+        },
+        {
+            "bind_args": {
+                "actual": "@scala_annex_org_scala_sbt_util_scripted_2_12",
+                "name": "jar/scala_annex_org/scala_sbt/util_scripted_2_12"
+            },
+            "import_args": {
+                "default_visibility": [ "//visibility:public" ],
+                "deps": [
+                    "@scala_annex_org_scala_lang_modules_scala_parser_combinators_2_12",
+                    "@scala_annex_org_scala_sbt_io_2_12",
+                    "@scala_annex_org_scala_sbt_util_interface",
+                    "@scala_annex_org_scala_sbt_util_logging_2_12",
+                    "@scala_annex_scala_2_12_scala_library//jar"
+                ],
+                "jar_sha256": "1dd662292af6bfe6371e6d1d7d4c9d1fd9d238fd52c5eb06a56066a5ca7a78a0",
+                "jar_urls": [
+                    "http://central.maven.org/maven2/org/scala-sbt/util-scripted_2.12/1.2.1/util-scripted_2.12-1.2.1.jar"
+                ],
+                "licenses": [ "notice" ],
+                "name": "scala_annex_org_scala_sbt_util_scripted_2_12",
+                "srcjar_sha256": "c8c3160caf98a5c72717967149ae44acd1f4c47b607e5abbbad257cee711d66e",
+                "srcjar_urls": [
+                    "http://central.maven.org/maven2/org/scala-sbt/util-scripted_2.12/1.2.1/util-scripted_2.12-1.2.1-sources.jar"
+                ]
+            },
+            "lang": "scala"
+        },
+        {
+            "bind_args": {
+                "actual": "@scala_annex_org_scala_sbt_util_tracking_2_12",
+                "name": "jar/scala_annex_org/scala_sbt/util_tracking_2_12"
+            },
+            "import_args": {
+                "default_visibility": [ "//visibility:public" ],
+                "deps": [
+                    "@scala_annex_org_scala_sbt_io_2_12",
+                    "@scala_annex_org_scala_sbt_util_cache_2_12",
+                    "@scala_annex_scala_2_12_scala_library//jar"
+                ],
+                "jar_sha256": "f7cc043508205d49bca0db6cc1b23df17d746a48b92f734a1cf432aef51e397b",
+                "jar_urls": [
+                    "http://central.maven.org/maven2/org/scala-sbt/util-tracking_2.12/1.2.1/util-tracking_2.12-1.2.1.jar"
+                ],
+                "licenses": [ "notice" ],
+                "name": "scala_annex_org_scala_sbt_util_tracking_2_12",
+                "srcjar_sha256": "fe0aa4505c7a46860cb4bf96b43ecebce657883cdee1f0419e5d823686e1dac2",
+                "srcjar_urls": [
+                    "http://central.maven.org/maven2/org/scala-sbt/util-tracking_2.12/1.2.1/util-tracking_2.12-1.2.1-sources.jar"
+                ]
+            },
+            "lang": "scala"
         },
         {
             "bind_args": {
@@ -2430,7 +2504,7 @@ def list_dependencies():
                     "http://central.maven.org/maven2/org/scala-sbt/zinc-compile-core_2.12/1.2.1/zinc-compile-core_2.12-1.2.1-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
         },
         {
             "bind_args": {
@@ -2458,7 +2532,7 @@ def list_dependencies():
                     "http://central.maven.org/maven2/org/scala-sbt/zinc-core_2.12/1.2.1/zinc-core_2.12-1.2.1-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
         },
         {
             "bind_args": {
@@ -2481,7 +2555,7 @@ def list_dependencies():
                     "http://central.maven.org/maven2/org/scala-sbt/zinc-ivy-integration_2.12/1.2.1/zinc-ivy-integration_2.12-1.2.1-sources.jar"
                 ]
             },
-            "lang": "java"
+            "lang": "scala"
         },
         {
             "bind_args": {
