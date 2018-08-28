@@ -174,31 +174,87 @@ java_proto_library(
     deps = [":zinc_options_proto"],
 )
 
+###########################333
+
 scala_import(
     name = "kevin_local_org_scala_sbt_zinc_2_12",
-    jars = ["local_zinc/zinc/target/scala-2.12/zinc_2.12-1.2.1-18af986799e952929148e0305e5337d91bc2d953-SNAPSHOT.jar"],
+    jars = ["local_zinc/zinc/target/scala-2.12/zinc_2.12-1.2.1.jar"],
     deps = [
-        "@scala_annex_org_scala_sbt_zinc_classfile_2_12",
-        "@scala_annex_org_scala_sbt_zinc_compile_core_2_12",
-        "@kevin_local_org_scala_sbt_zinc_core_2_12",
-        "@scala_annex_org_scala_sbt_zinc_ivy_integration_2_12",
-        "@scala_annex_org_scala_sbt_zinc_persist_2_12",
+        ":kevin_local_org_scala_sbt_zinc_classfile_2_12",
+        ":kevin_local_ch_epfl_scala_zinc_compile_core_2_12",
+        ":kevin_local_org_scala_sbt_zinc_core_2_12",
+        ":kevin_local_org_scala_sbt_zinc_ivy_integration_2_12",
+        ":kevin_local_org_scala_sbt_zinc_persist_2_12",
         "@scala_annex_scala_2_12_scala_library//jar",
     ]
 )
 
 scala_import(
-    name = "kevin_local_org_scala_sbt_zinc_core_2_12",
-    jars = ["local_zinc/internal/zinc-core/target/scala-2.12/zinc-core_2.12-1.2.1-18af986799e952929148e0305e5337d91bc2d953-SNAPSHOT.jar"],
+    name = "kevin_local_ch_epfl_scala_zinc_compile_core_2_12",
+    jars = ["local_zinc/internal/zinc-compile-core/target/scala-2.12/zinc-compile-core_2.12-1.2.1.jar"],
     deps = [
-        "@scala_annex_org_scala_sbt_zinc_classfile_2_12",
-        "@scala_annex_org_scala_sbt_zinc_compile_core_2_12",
-        "@kevin_local_org_scala_sbt_zinc_core_2_12",
-        "@scala_annex_org_scala_sbt_zinc_ivy_integration_2_12",
-        "@scala_annex_org_scala_sbt_zinc_persist_2_12",
-        "@scala_annex_scala_2_12_scala_library//jar",
+        "@scala_annex_org_scala_lang_modules_scala_parser_combinators_2_12",
+        "@scala_annex_org_scala_sbt_launcher_interface",
+        "@scala_annex_org_scala_sbt_util_control_2_12"
     ]
 )
+
+scala_import(
+    name = "kevin_local_org_scala_sbt_zinc_classfile_2_12",
+    jars = ["local_zinc/internal/zinc-classfile/target-2.12/scala-2.12/zinc-classfile_2.12-1.2.1.jar"],
+)
+
+scala_import(
+    name = "kevin_local_org_scala_sbt_zinc_persist_2_12",
+    jars = ["local_zinc/internal/zinc-persist/target/scala-2.12/zinc-persist_2.12-1.2.1.jar"],
+    deps = [
+        "@scala_annex_com_trueaccord_scalapb_scalapb_runtime_2_12",
+        "@scala_annex_scala_2_12_scala_library//jar",
+        "@scala_annex_org_scala_sbt_sbinary_2_12",
+        ":kevin_local_org_scala_sbt_zinc_core_2_12",
+    ]
+)
+
+scala_import(
+    name = "kevin_local_org_scala_sbt_zinc_ivy_integration_2_12",
+    jars = ["local_zinc/internal/zinc-ivy-integration/target/scala-2.12/zinc-ivy-integration_2.12-1.2.1.jar"],
+    deps = [
+        "@scala_annex_org_scala_sbt_librarymanagement_core_2_12",
+    ]
+)
+
+scala_import(
+    name = "kevin_local_org_scala_sbt_zinc_core_2_12",
+    jars = ["local_zinc/internal/zinc-core/target/scala-2.12/zinc-core_2.12-1.2.1.jar"],
+    deps = [
+        ":kevin_local_org_scala_sbt_compiler_interface_2_12",
+        "@scala_annex_org_scala_sbt_io_2_12",
+        "@scala_annex_org_scala_sbt_util_logging_2_12",
+        "@scala_annex_org_scala_sbt_util_relation_2_12",
+        ":kevin_local_org_scala_sbt_zinc_apiinfo_2_12",
+        ":kevin_local_org_scala_sbt_zinc_classpath_2_12",
+    ]
+)
+
+scala_import(
+    name = "kevin_local_org_scala_sbt_compiler_interface_2_12",
+    jars = ["local_zinc/internal/compiler-interface/target/compiler-interface-1.2.1.jar"],
+    deps = [
+        "@scala_annex_org_scala_sbt_util_interface",
+    ]
+)
+
+scala_import(
+    name = "kevin_local_org_scala_sbt_zinc_apiinfo_2_12",
+    jars = ["local_zinc/internal/zinc-apiinfo/target-2.12/scala-2.12/zinc-apiinfo_2.12-1.2.1.jar"],
+)
+
+scala_import(
+    name = "kevin_local_org_scala_sbt_zinc_classpath_2_12",
+    jars = ["local_zinc/internal/zinc-classpath/target-2.12/scala-2.12/zinc-classpath_2.12-1.2.1.jar"],
+)
+
+#################################
 
 scalac_binary(
     name = "zinc",
@@ -214,7 +270,7 @@ scalac_binary(
         "//rules/common:worker",
         "//rules/common/third_party/bazel/src/java_tools/buildjar/java/com/google/devtools/build/buildjar/jarhelper",
         "@scala_annex_org_scala_sbt_test_interface",
-        ":kevin_local_org_scala_sbt_zinc",
+        ":kevin_local_org_scala_sbt_zinc_2_12",
     ],
 )
 
