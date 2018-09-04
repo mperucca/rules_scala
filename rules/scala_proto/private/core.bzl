@@ -12,7 +12,7 @@ def scala_proto_library_implementation(ctx):
 
     compiler = ctx.toolchains["@rules_scala_annex//rules/scala_proto:compiler_toolchain_type"]
 
-    compiler_inputs, _, input_manifests = ctx.resolve_command(tools = [compiler.compiler])
+    compiler_inputs, _, _ = ctx.resolve_command(tools = [compiler.compiler])
 
     srcjar = ctx.outputs.srcjar
 
@@ -32,7 +32,7 @@ def scala_proto_library_implementation(ctx):
         inputs = depset(direct = [], transitive = [transitive_sources]),
         outputs = [srcjar],
         executable = compiler.compiler.files_to_run.executable,
-        input_manifests = input_manifests,
+        tools = compiler_inputs,
         execution_requirements = {"supports-workers": supports_workers},
         arguments = [args],
     )
