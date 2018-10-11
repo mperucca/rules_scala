@@ -241,7 +241,7 @@ def phase_compile(ctx, g):
         outputs = outputs,
         executable = runner.runner.files_to_run.executable,
         input_manifests = input_manifests,
-        execution_requirements = {"no-sandbox": "1", "supports-workers": "1"},
+        execution_requirements = {"no-sandbox": "1", "supports-multiplex-workers": "1"},
         arguments = [args],
     )
 

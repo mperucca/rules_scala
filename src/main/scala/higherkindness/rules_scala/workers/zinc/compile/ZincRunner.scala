@@ -8,7 +8,7 @@ import workers.zinc.common.FileUtil
 import common.worker.WorkerMain
 
 import com.google.devtools.build.buildjar.jarhelper.JarCreator
-import java.io.{File, PrintWriter}
+import java.io.{File, PrintStream, PrintWriter}
 import java.nio.file.{Files, NoSuchFileException, Path, Paths}
 import java.util.{List => JList, Optional, Properties}
 import net.sourceforge.argparse4j.ArgumentParsers
@@ -69,12 +69,12 @@ object ZincRunner extends WorkerMain[Namespace] {
     parser.parseArgsOrFail(args.getOrElse(Array.empty))
   }
 
-  protected[this] def work(worker: Namespace, args: Array[String]) = {
+  protected[this] def work(worker: Namespace, args: Array[String], out: PrintStream) = {
     val parser = ArgumentParsers.newFor("zinc").addHelp(true).defaultFormatWidth(80).fromFilePrefix("@").build()
     CommonArguments.add(parser)
     val namespace = parser.parseArgsOrFail(args)
 
-    val logger = new AnnexLogger(namespace.getString("log_level"))
+    val logger = new AnnexLogger(namespace.getString("log_level"), out)
 
     val tmpDir = namespace.get[File]("tmp").toPath
 

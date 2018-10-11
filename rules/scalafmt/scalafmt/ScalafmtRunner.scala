@@ -1,7 +1,7 @@
 package annex.scalafmt
 
 import higherkindness.rules_scala.common.worker.WorkerMain
-import java.io.File
+import java.io.{File, PrintStream}
 import java.nio.charset.Charset
 import java.nio.file.Files
 import net.sourceforge.argparse4j.ArgumentParsers
@@ -17,7 +17,7 @@ object ScalafmtRunner extends WorkerMain[Unit] {
 
   protected[this] def init(args: Option[Array[String]]): Unit = {}
 
-  protected[this] def work(worker: Unit, args: Array[String]): Unit = {
+  protected[this] def work(worker: Unit, args: Array[String], out: PrintStream): Unit = {
 
     val parser = ArgumentParsers.newFor("scalafmt").addHelp(true).defaultFormatWidth(80).fromFilePrefix("@").build
     parser.addArgument("--config").required(true).`type`(Arguments.fileType)
@@ -39,8 +39,8 @@ object ScalafmtRunner extends WorkerMain[Unit] {
       format(source)
     } catch {
       case e @ (_: org.scalafmt.Error | _: scala.meta.parsers.ParseException) => {
-        System.err.println(Console.YELLOW + "WARN: " + Console.WHITE + "Unable to format file due to bug in scalafmt")
-        System.err.println(Console.YELLOW + "WARN: " + Console.WHITE + e)
+        out.println(Console.YELLOW + "WARN: " + Console.WHITE + "Unable to format file due to bug in scalafmt")
+        out.println(Console.YELLOW + "WARN: " + Console.WHITE + e)
         source
       }
     }

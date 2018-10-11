@@ -8,7 +8,7 @@ import workers.zinc.common.AnnexScalaInstance
 import workers.zinc.common.CommonArguments.LogLevel
 import workers.zinc.common.FileUtil
 
-import java.io.File
+import java.io.{File, PrintStream}
 import java.nio.file.{Files, NoSuchFileException}
 import java.util.{Collections, Optional, Properties}
 import net.sourceforge.argparse4j.ArgumentParsers
@@ -84,7 +84,7 @@ object DocRunner extends WorkerMain[Unit] {
 
   override def init(args: Option[Array[String]]): Unit = ()
 
-  override def work(ctx: Unit, args: Array[String]): Unit = {
+  override def work(ctx: Unit, args: Array[String], out: PrintStream): Unit = {
     val namespace = parser.parseArgsOrFail(args)
 
     val tmpDir = namespace.get[File]("tmp").toPath
