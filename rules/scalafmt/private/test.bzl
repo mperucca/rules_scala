@@ -47,7 +47,7 @@ def build_format(ctx):
                 input_manifests = runner_manifests,
                 inputs = [ctx.file.config, src],
                 tools = runner_inputs,
-                execution_requirements = {"supports-workers": "1"},
+                execution_requirements = {"supports-multiplex-workers": "1"},
                 mnemonic = "ScalaFmt",
             )
             manifest_content.append("{} {}".format(src.short_path, file.short_path))
