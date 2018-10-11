@@ -2,7 +2,7 @@ package annex.deps
 
 import annex.args.Implicits._
 import annex.worker.WorkerMain
-import java.io.File
+import java.io.{File, PrintStream}
 import java.nio.file.{FileAlreadyExistsException, Files}
 import java.util.Collections
 import net.sourceforge.argparse4j.ArgumentParsers
@@ -40,7 +40,7 @@ object DepsRunner extends WorkerMain[Unit] {
 
   override def init(args: Option[Array[String]]): Unit = ()
 
-  override def work(ctx: Unit, args: Array[String]): Unit = {
+  override def work(ctx: Unit, args: Array[String], out: PrintStream): Unit = {
     val namespace = argParser.parseArgs(args)
 
     val label = namespace.getString("label").tail
@@ -56,9 +56,9 @@ object DepsRunner extends WorkerMain[Unit] {
       (directLabels -- whitelist).filterNot(labelToPaths(_).exists(usedPaths))
     } else Nil
     remove.foreach { depLabel =>
-      println(s"Target '$depLabel' not used, please remove it from the deps.")
-      println(s"You can use the following buildozer command:")
-      println(s"buildozer 'remove deps $depLabel' $label")
+      out.println(s"Target '$depLabel' not used, please remove it from the deps.")
+      out.println(s"You can use the following buildozer command:")
+      out.println(s"buildozer 'remove deps $depLabel' $label")
     }
 
     val add = if (namespace.getBoolean("check_direct") == true) {
@@ -72,9 +72,9 @@ object DepsRunner extends WorkerMain[Unit] {
         )
     } else Nil
     add.foreach { depLabel =>
-      println(s"Target '$depLabel' is used but isn't explicitly declared, please add it to the deps.")
-      println(s"You can use the following buildozer command:")
-      println(s"buildozer 'add deps $depLabel' $label")
+      out.println(s"Target '$depLabel' is used but isn't explicitly declared, please add it to the deps.")
+      out.println(s"You can use the following buildozer command:")
+      out.println(s"buildozer 'add deps $depLabel' $label")
     }
 
     if (add.isEmpty && remove.isEmpty) {
