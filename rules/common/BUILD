@@ -18,6 +18,7 @@ bootstrap_scala_library(
     visibility = ["//visibility:public"],
     deps = [
         "//rules/common/third_party/bazel/src/main/protobuf:worker_protocol_java_proto",
+        "@scalafmt_net_sourceforge_argparse4j_argparse4j",
     ],
 )
 
