@@ -27,6 +27,7 @@ scala_library(
     visibility = ["//visibility:public"],
     deps = [
         "@annex//:org_scala_sbt_test_interface",
+        "@annex//:org_scala_lang_modules_scala_xml_2_12",
     ],
 )
 
