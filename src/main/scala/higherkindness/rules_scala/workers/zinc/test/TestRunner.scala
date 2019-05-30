@@ -104,7 +104,8 @@ object TestRunner {
     val runPath = Paths.get(sys.props("bazel.runPath"))
 
     val testArgFile = Paths.get(sys.props("scalaAnnex.test.args"))
-    val testNamespace = testArgParser.parseArgsOrFail(Files.readAllLines(testArgFile).asScala.toArray)
+    val runnerArgs = new java.util.ArrayList[String]()
+    val testNamespace = testArgParser.parseKnownArgsOrFail(Files.readAllLines(testArgFile).asScala.toArray, runnerArgs)
 
     val logger = new AnnexTestingLogger(namespace.getBoolean("color"), namespace.getString("verbosity"))
 
@@ -171,7 +172,7 @@ object TestRunner {
             new ProcessTestRunner(framework, classpath, new ProcessCommand(executable.toString, arguments), logger)
           case "none" => new BasicTestRunner(framework, classLoader, logger)
         }
-        runner.execute(filteredTests, testScopeAndName.getOrElse(""))
+        runner.execute(filteredTests, testScopeAndName.getOrElse(""), runnerArgs.asScala.toArray)
       }
     }
     sys.exit(if (passed) 0 else 1)
