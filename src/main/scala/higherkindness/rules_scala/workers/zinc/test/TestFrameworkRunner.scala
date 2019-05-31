@@ -17,20 +17,22 @@ import sbt.testing.{Event, Framework, Logger}
 import scala.collection.mutable
 
 class BasicTestRunner(framework: Framework, classLoader: ClassLoader, logger: Logger) extends TestFrameworkRunner {
-  def execute(tests: Seq[TestDefinition], scopeAndTestName: String, args: Array[String]) = {
+  def execute(tests: Seq[TestDefinition], scopeAndTestName: String, shardParallelism: Int) = {
     var tasksAndEvents = new mutable.ListBuffer[(String, mutable.ListBuffer[Event])]()
     ClassLoaders.withContextClassLoader(classLoader) {
-      TestHelper.withRunner(framework, scopeAndTestName, classLoader, args) { runner =>
+      TestHelper.withRunner(framework, scopeAndTestName, classLoader) { runner =>
         val reporter = new TestReporter(logger)
         val tasks = runner.tasks(tests.map(TestHelper.taskDef(_, scopeAndTestName)).toArray)
         reporter.pre(framework, tasks)
         val taskExecutor = new TestTaskExecutor(logger)
         val failures = mutable.Set[String]()
-        tasks.foreach { task =>
+        val parallelTasks = tasks.par
+        parallelTasks.tasksupport = new scala.collection.parallel.ForkJoinTaskSupport(new java.util.concurrent.ForkJoinPool(shardParallelism))
+        parallelTasks.foreach { task =>
           reporter.preTask(task)
           val events = taskExecutor.execute(task, failures)
           reporter.postTask()
-          tasksAndEvents += ((task.taskDef.fullyQualifiedName, events))
+          tasksAndEvents.synchronized { tasksAndEvents += ((task.taskDef.fullyQualifiedName, events)) }
         }
         reporter.post(failures.toSeq)
         val xmlReporter = new JUnitXmlReporter(tasksAndEvents)
@@ -43,13 +45,13 @@ class BasicTestRunner(framework: Framework, classLoader: ClassLoader, logger: Lo
 
 class ClassLoaderTestRunner(framework: Framework, classLoaderProvider: () => ClassLoader, logger: Logger)
     extends TestFrameworkRunner {
-  def execute(tests: Seq[TestDefinition], scopeAndTestName: String, args: Array[String]) = {
+  def execute(tests: Seq[TestDefinition], scopeAndTestName: String, shardParallelism: Int) = {
     var tasksAndEvents = new mutable.ListBuffer[(String, mutable.ListBuffer[Event])]()
     val reporter = new TestReporter(logger)
 
     val classLoader = framework.getClass.getClassLoader
     ClassLoaders.withContextClassLoader(classLoader) {
-      TestHelper.withRunner(framework, scopeAndTestName, classLoader, args) { runner =>
+      TestHelper.withRunner(framework, scopeAndTestName, classLoader) { runner =>
         val tasks = runner.tasks(tests.map(TestHelper.taskDef(_, scopeAndTestName)).toArray)
         reporter.pre(framework, tasks)
       }
@@ -60,7 +62,7 @@ class ClassLoaderTestRunner(framework: Framework, classLoaderProvider: () => Cla
     tests.foreach { test =>
       val classLoader = classLoaderProvider()
       val isolatedFramework = new TestFrameworkLoader(classLoader, logger).load(framework.getClass.getName).get
-      TestHelper.withRunner(isolatedFramework, scopeAndTestName, classLoader, args) { runner =>
+      TestHelper.withRunner(isolatedFramework, scopeAndTestName, classLoader) { runner =>
         ClassLoaders.withContextClassLoader(classLoader) {
           val tasks = runner.tasks(Array(TestHelper.taskDef(test, scopeAndTestName)))
           tasks.foreach { task =>
@@ -90,12 +92,12 @@ class ProcessTestRunner(
   command: ProcessCommand,
   logger: Logger with Serializable
 ) extends TestFrameworkRunner {
-  def execute(tests: Seq[TestDefinition], scopeAndTestName: String, args: Array[String]) = {
+  def execute(tests: Seq[TestDefinition], scopeAndTestName: String, shardParallelism: Int) = {
     val reporter = new TestReporter(logger)
 
     val classLoader = framework.getClass.getClassLoader
     ClassLoaders.withContextClassLoader(classLoader) {
-      TestHelper.withRunner(framework, scopeAndTestName, classLoader, args) { runner =>
+      TestHelper.withRunner(framework, scopeAndTestName, classLoader) { runner =>
         val tasks = runner.tasks(tests.map(TestHelper.taskDef(_, scopeAndTestName)).toArray)
         reporter.pre(framework, tasks)
       }
@@ -130,5 +132,5 @@ class ProcessTestRunner(
 }
 
 trait TestFrameworkRunner {
-  def execute(tests: Seq[TestDefinition], scopeAndTestName: String, args: Array[String]): Boolean
+  def execute(tests: Seq[TestDefinition], scopeAndTestName: String, shardParallelism: Int): Boolean
 }

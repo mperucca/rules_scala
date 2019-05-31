@@ -334,7 +334,9 @@ def make_scala_test(*extras):
                 ),
                 "runner": attr.label(default = "@rules_scala_annex//src/main/scala/higherkindness/rules_scala/workers/zinc/test"),
                 "subprocess_runner": attr.label(default = "@rules_scala_annex//src/main/scala/higherkindness/rules_scala/common/sbt-testing:subprocess"),
-                "runner_args": attr.string_list(),
+                "parallelism_per_shard": attr.int(
+                    default = 1
+                ),
             },
             _extras_attributes(extras),
             *[extra["attrs"] for extra in extras]

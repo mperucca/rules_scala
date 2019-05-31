@@ -86,6 +86,11 @@ object TestRunner {
       .`type`(Arguments.fileType.verifyCanRead().verifyExists())
       .setDefault_(Collections.emptyList)
     parser
+      .addArgument("--parallelism_per_shard")
+      .help("Number of tests to run in parallel for each shard")
+      .`type`(classOf[Int])
+      .setDefault_(1)
+    parser
   }
 
   def main(args: Array[String]): Unit = {
@@ -104,8 +109,7 @@ object TestRunner {
     val runPath = Paths.get(sys.props("bazel.runPath"))
 
     val testArgFile = Paths.get(sys.props("scalaAnnex.test.args"))
-    val runnerArgs = new java.util.ArrayList[String]()
-    val testNamespace = testArgParser.parseKnownArgsOrFail(Files.readAllLines(testArgFile).asScala.toArray, runnerArgs)
+    val testNamespace = testArgParser.parseArgsOrFail(Files.readAllLines(testArgFile).asScala.toArray)
 
     val logger = new AnnexTestingLogger(namespace.getBoolean("color"), namespace.getString("verbosity"))
 
@@ -172,7 +176,7 @@ object TestRunner {
             new ProcessTestRunner(framework, classpath, new ProcessCommand(executable.toString, arguments), logger)
           case "none" => new BasicTestRunner(framework, classLoader, logger)
         }
-        runner.execute(filteredTests, testScopeAndName.getOrElse(""), runnerArgs.asScala.toArray)
+        runner.execute(filteredTests, testScopeAndName.getOrElse(""), testNamespace.getInt("parallelism_per_shard"))
       }
     }
     sys.exit(if (passed) 0 else 1)
