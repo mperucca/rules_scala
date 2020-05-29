@@ -12,7 +12,12 @@ import java.util.zip.{GZIPInputStream, GZIPOutputStream}
 import java.util.Optional
 import sbt.internal.inc.binary.converters.{ProtobufReaders, ProtobufWriters}
 import sbt.internal.inc.{APIs, Analysis, Relations, SourceInfos, Stamper, Stamps, schema, Stamp => StampImpl}
+import sbt.internal.inc.schema.{ClassDependencies, UsedName, UsedNames, Values}
 import sbt.io.IO
+import scala.math.Ordering
+import scala.collection.mutable.StringBuilder
+import xsbti.api.AnalyzedClass
+import scala.collection.immutable.TreeMap
 import xsbti.compile.analysis.{GenericMapper, ReadMapper, ReadWriteMappers, Stamp, WriteMapper}
 import xsbti.compile.{AnalysisContents, AnalysisStore, MiniSetup}
 
@@ -107,7 +112,16 @@ class AnxAnalyses(format: AnxAnalysisStore.Format) {
 
   def apis = new Store[APIs](
     stream => reader.fromApis(shouldStoreApis = true)(format.read(schema.APIs, stream)),
-    (stream, value) => format.write(writer.toApis(value, shouldStoreApis = true).update(apiFileWrite), stream)
+    (stream, value) => format.write(
+      writer.toApis(
+        APIs(
+          TreeMap[String, AnalyzedClass]() ++ value.internal,
+          TreeMap[String, AnalyzedClass]() ++ value.external
+        ),
+        shouldStoreApis = true
+      ).update(apiFileWrite),
+      stream
+    )
   )
 
   def miniSetup = new Store[MiniSetup](
@@ -115,10 +129,56 @@ class AnxAnalyses(format: AnxAnalysisStore.Format) {
     (stream, value) => format.write(writer.toMiniSetup(value), stream)
   )
 
+  object UsedNameOrdering extends Ordering[UsedName] {
+    def compare(x: UsedName, y: UsedName): Int = {
+      (x.name + x.scopes.toString) compare (y.name + y.scopes.toString)
+    }
+  }
+
+  def sortValuesMap(m: Map[String, Values]): TreeMap[String, Values] = {
+    TreeMap[String, Values]() ++ m.mapValues { value =>
+      value.copy(
+        values = value.values.sorted
+      )
+    }
+  }
+
+  def sortUsedNamesMap(usedNamesMap: Map[String, UsedNames]): TreeMap[String, UsedNames] = {
+    TreeMap[String, UsedNames]() ++ usedNamesMap.mapValues { currentUsedNames =>
+      currentUsedNames.copy(
+        usedNames = currentUsedNames.usedNames.sorted(UsedNameOrdering)
+      )
+    }
+  }
+
+  def sortClassDependencies(classDependencies: ClassDependencies): ClassDependencies = {
+    classDependencies.copy(
+      internal = sortValuesMap(classDependencies.internal),
+      external = sortValuesMap(classDependencies.external)
+    )
+  }
+
+  def sortRelations(relations: schema.Relations): schema.Relations = {
+    relations.copy(
+      srcProd = sortValuesMap(relations.srcProd),
+      libraryDep = sortValuesMap(relations.libraryDep),
+      libraryClassName = sortValuesMap(relations.libraryClassName),
+      classes = sortValuesMap(relations.classes),
+      productClassName = sortValuesMap(relations.productClassName),
+      names = sortUsedNamesMap(relations.names),
+      memberRef = relations.memberRef.map(sortClassDependencies),
+      localInheritance = relations.localInheritance.map(sortClassDependencies),
+      inheritance = relations.inheritance.map(sortClassDependencies)
+    )
+  }
+
   def relations = new Store[Relations](
     stream =>
       reader.fromRelations(format.read(schema.Relations, stream).update(relationsMapper(mappers.getReadMapper))),
-    (stream, value) => format.write(writer.toRelations(value).update(relationsMapper(mappers.getWriteMapper)), stream)
+    (stream, value) => format.write(
+        sortRelations(writer.toRelations(value).update(relationsMapper(mappers.getWriteMapper))),
+        stream
+    )
   )
 
   def sourceInfos = new Store[SourceInfos](
