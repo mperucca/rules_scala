@@ -11,12 +11,12 @@ import java.nio.file.attribute.FileTime
 import java.util.zip.{GZIPInputStream, GZIPOutputStream}
 import java.util.Optional
 import sbt.internal.inc.binary.converters.{ProtobufReaders, ProtobufWriters}
+import sbt.internal.inc.schema.Type.Structure
 import sbt.internal.inc.{APIs, Analysis, Relations, SourceInfos, Stamper, Stamps, schema, Stamp => StampImpl}
-import sbt.internal.inc.schema.{ClassDependencies, UsedName, UsedNames, Values}
+import sbt.internal.inc.schema.{AnalyzedClass, Annotation, ClassDependencies, ClassLike, Companions, NameHash, TypeParameter, UsedName, UsedNames, Values}
 import sbt.io.IO
 import scala.math.Ordering
 import scala.collection.mutable.StringBuilder
-import xsbti.api.AnalyzedClass
 import scala.collection.immutable.TreeMap
 import xsbti.compile.analysis.{GenericMapper, ReadMapper, ReadWriteMappers, Stamp, WriteMapper}
 import xsbti.compile.{AnalysisContents, AnalysisStore, MiniSetup}
@@ -110,16 +110,63 @@ class AnxAnalyses(format: AnxAnalysisStore.Format) {
   private[this] val reader = new ProtobufReaders(mappers.getReadMapper, schema.Version.V1)
   private[this] val writer = new ProtobufWriters(mappers.getWriteMapper)
 
+  def sortAnnotation(annotation: Annotation): Annotation = {
+    annotation.copy(
+      arguments = annotation.arguments.sortWith(_.hashCode() > _.hashCode())
+    )
+  }
+
+  def sortTypeParameter(typeParameter: TypeParameter): TypeParameter = {
+    typeParameter.copy(
+      annotations = typeParameter.annotations.map(annotation => sortAnnotation(annotation)).sortWith(_.hashCode() > _.hashCode()),
+      typeParameters = typeParameter.typeParameters.map(_typeParameter => sortTypeParameter(_typeParameter)),
+    )
+  }
+
+  def sortStructure(structure: Structure): Structure = {
+    structure.copy(
+      parents = structure.parents.sortWith(_.hashCode() < _.hashCode()),
+      declared = structure.declared.sortWith(_.hashCode() < _.hashCode()),
+      inherited = structure.inherited.sortWith(_.hashCode() < _.hashCode()),
+    )
+  }
+
+  def sortClassLike(classLike: ClassLike): ClassLike = {
+    classLike.copy(
+      structure = classLike.structure.flatMap(structure => Option[Structure](sortStructure(structure))),
+      savedAnnotations = classLike.savedAnnotations.sorted,
+      childrenOfSealedClass = classLike.childrenOfSealedClass.sortWith(_.hashCode() > _.hashCode()),
+      typeParameters = classLike.typeParameters.map(typeParameter => sortTypeParameter(typeParameter)).sortWith(_.hashCode() > _.hashCode()),
+    )
+  }
+
+  def sortCompanions(companions: Companions): Companions = {
+    Companions(
+      classApi = companions.classApi.flatMap(classLike => Option[ClassLike](sortClassLike(classLike))),
+      objectApi = companions.objectApi.flatMap(classLike => Option[ClassLike](sortClassLike(classLike))),
+    )
+  }
+
+  def sortAnalyzedClassMap(analyzedClassMap: Map[String, AnalyzedClass]): TreeMap[String, AnalyzedClass] = {
+    TreeMap[String, AnalyzedClass]() ++ analyzedClassMap.mapValues { analyzedClass =>
+      analyzedClass.copy(
+        api = analyzedClass.api.flatMap(companions => Option[Companions](sortCompanions(companions))),
+        nameHashes = analyzedClass.nameHashes.sortWith(_.hashCode() > _.hashCode()),
+      )
+    }
+  }
+
+  def sortApis(apis: schema.APIs): schema.APIs = {
+    apis.copy(
+      internal = sortAnalyzedClassMap(apis.internal),
+      external = sortAnalyzedClassMap(apis.external),
+    )
+  }
+
   def apis = new Store[APIs](
     stream => reader.fromApis(shouldStoreApis = true)(format.read(schema.APIs, stream)),
     (stream, value) => format.write(
-      writer.toApis(
-        APIs(
-          TreeMap[String, AnalyzedClass]() ++ value.internal,
-          TreeMap[String, AnalyzedClass]() ++ value.external
-        ),
-        shouldStoreApis = true
-      ).update(apiFileWrite),
+      sortApis(writer.toApis(value, shouldStoreApis = true).update(apiFileWrite)),
       stream
     )
   )
