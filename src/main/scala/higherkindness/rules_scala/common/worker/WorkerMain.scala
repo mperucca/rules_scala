@@ -79,7 +79,7 @@ trait WorkerMain[S] {
             val outStream = new ByteArrayOutputStream
             val out = new PrintStream(outStream)
             val requestId = request.getRequestId()
-            System.out.println(s"WorkRequest $requestId received with args: $args")
+            System.out.println(s"WorkRequest $requestId received with args: ${request.getArgumentsList}")
 
             val f: Future[Int] = Future {
               try {
